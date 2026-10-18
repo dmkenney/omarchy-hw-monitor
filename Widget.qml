@@ -181,7 +181,9 @@ Panel {
     id: tempMetrics
     font.family: root.fontFamily
     font.pixelSize: root.valueSize
-    text: "100°C"
+    // Reserve a three-digit reading in the chosen format, so "degree" and
+    // "bare" don't carry the width of a unit they never show.
+    text: root.tempText(100)
   }
 
   // Representative widest figure per RAM format; the cell never shrinks below

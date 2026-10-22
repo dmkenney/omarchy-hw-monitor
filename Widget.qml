@@ -586,18 +586,16 @@ Panel {
     Row {
       id: group
       required property var modelData
-      required property int index
       spacing: Style.space(4)
 
       // Every figure cell reserves its slot width: a single-digit value keeps
       // an invisible trailing gap instead of pulling its neighbours around.
-      // The old trail-only reservation is subsumed by this. The last cell has
-      // no neighbour to hold still, so it ends at its figure, and the bar's
-      // open-panel underline ends with it.
-      readonly property bool last: index === root.cells.length - 1
+      // The old trail-only reservation is subsumed by this. The slot covers the
+      // last cell too, so the bar never re-lays itself out when the final
+      // reading gains or loses a digit.
       readonly property int figureSlot: group.isTempCell ? root.tempSlot
         : (modelData.key === "ram" ? root.ramSlot : root.percentSlot)
-      readonly property real slack: root.showValues && !group.last
+      readonly property real slack: root.showValues
         ? Math.max(0, group.figureSlot - valueText.implicitWidth - spacing)
         : 0
 
@@ -756,7 +754,7 @@ Panel {
         Text {
           textFormat: Text.PlainText
           height: root.contentHeight
-          width: group.last ? implicitWidth : Math.max(implicitWidth, root.tempSlot)
+          width: Math.max(implicitWidth, root.tempSlot)
           text: modelData.temp
           color: root.tempColor(modelData.tempC)
           font.family: root.fontFamily
